@@ -56,3 +56,48 @@ bool moveKnight(int x, int y, int movement, int N, vector<vector<int>> &board) {
     // Intentamos realizar todos los movimientos posibles desde la posición actual
     for (int k = 0; k < 8; k++) {
         int nextX = x + movementsRow[k];
+        int nextY = y + movementsColumn[k];
+
+        if (isMovementValid(nextX, nextY, N, board)) {
+            board[nextX][nextY] = movement;
+
+            if (moveKnight(nextX, nextY, movement + 1, N, board))
+                return true;
+
+            // Si el movimiento no lleva a una solución, retrocede y prueba otro
+            board[nextX][nextY] = -1;
+        }
+    }
+
+    // Si no hay más soluciones desde la posición actual
+    return false;
+}
+
+// Función principal para realziar el recorrido
+void knightsTour(int N) {
+    vector<vector<int>> board(N, vector<int>(N, -1));
+
+    // El caballo inicia en la esquina superior izquierda
+    board[0][0] = 0;
+
+    if (moveKnight(0, 0, 1, N, board)) {
+        // Imprimimos el tablero con el orden de recorrido
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                cout << setw(4) << board[i][j] << " ";
+            }
+            cout << endl;
+        }
+    } else {
+        cout << "No hay solucion para el Knight's Tour con el tamano de tablero especificado." << endl;
+    }
+}
+
+int main() {
+    int N;
+    cin >> N;
+
+    // Llamado a la función para resolver el problema del Knight's Tour
+    knightsTour(N);
+    return 0;
+}
